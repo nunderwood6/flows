@@ -1,0 +1,74 @@
+body {
+	/*font-family: proxima-nova, sans-serif;*/
+	font-family: 'Playfair Display', serif;
+	width: 100%;
+	height: 100%;
+	background-color: #f7f5f2;
+}
+
+h1 {
+	font-size: 2.2em;
+	max-width: 650px;
+	margin: 25px auto;
+}
+
+h3 {
+	font-family: proxima-nova, sans-serif;
+	text-decoration: underline;
+	max-width: 650px;
+	margin: 25px auto;
+	text-align: center;
+}
+
+h4.toggle {
+	font-family: proxima-nova, sans-serif;
+	font-size: 16px;
+	text-align: center;
+	font-weight: normal;
+	cursor: pointer;
+}
+
+h4.toggle .active {
+	font-weight: bold;
+}
+
+.highlight {
+  stroke-opacity: 1;
+}
+
+.dehighlight {
+  stroke-opacity: 0.05;
+}
+
+div.graphic-container {
+	width: 100%;
+	height: 95%;
+	max-width: 700px;
+	margin: 0 auto;
+	position: relative;
+}
+
+div.graphic-container svg {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+
+p {
+	max-width: 650px;
+	margin: 0 auto;
+	padding: 0 5px;
+	font-size: 16px;
+}
+
+.state,.municipio,.country {
+	fill: #e1ecf5;
+	stroke: #fff;
+	stroke-width: 0.75px;
+}
+
+text {
+font-family: proxima-nova, sans-serif;
+
+}
