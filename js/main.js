@@ -18,12 +18,11 @@ function loadData(){
       var countries = countries_geojson.features;
 
       //format and draw sankey
-       // var formatted = formatSankeyData(remittances);
-       var formatted = formatSankeyData(singleRemittance)
+       var formatted = formatSankeyData(remittances);
+       // var formatted = formatSankeyData(singleRemittance)
        drawSankey(formatted);
 
        //format and draw map
-       // var mapFlows = formatMapLinks(remittances);
        initializeMap(states,departamentos,formatted,countries);
 
        //add control to switch between sankey and map
@@ -31,29 +30,6 @@ function loadData(){
 	})
 
 }
-
-// function formatMapLinks(rawData){
-
-//   var formatted = [];
-
-//   //add links
-//   for(var state of rawData){
-//       //loop through departments
-//       for(var property in state){
-//         if(property != "sender"){
-//           var value = +state[property].replace(/,/g,"");
-//           if(value !=0){
-//             formatted.push({
-//               "source": state.sender,
-//               "target": property,
-//               "value": value
-//             })
-//           }
-//         }
-//       }
-//   }
-//   return formatted;
-// }
 
 function formatSankeyData(rawData){
 
@@ -279,43 +255,43 @@ function initializeMap(states,departamentos,formatted,countries){
                     d3.selectAll(".highlight").classed("highlight", false);
                   });
 
-  // //draw usa states
-  //  svg.append("g")
-  //         // .attr("class","usa")
-  //   .selectAll(".state")
-  //             .data(states.features)
-  //             .enter()
-  //             .append("path")
-  //                 .attr("d", pathUsa)
-  //                 .attr("class", "state")
-  //                 .attr("id", d=>d.properties.name.replace(/ /g,""))
-  //                 .on("mouseover", function(d){
-  //                   d3.selectAll(".mapFlow").classed("dehighlight",true);
-  //                   //move state to top of drawing order
-  //                   d3.select(this).raise();
-  //                   //highlight state
-  //                   d3.select(this).style("stroke", "#000").style("stroke-width", "1px");
-  //                   //highlight flow arrows
-  //                   d3.selectAll(".flow"+d.properties["name"].replace(/ /g,"_")).classed("dehighlight",false).classed("highlight", true); 
-  //                 })
-  //                 .on("mouseout", function(d){
-  //                   d3.selectAll(".mapFlow").classed("dehighlight",false);
-  //                   //dehighlight state
-  //                   d3.select(this).style("stroke", "#fff").style("stroke-width", "0.25px");
-  //                   //dehighlight flow arrows
-  //                   d3.selectAll(".highlight").classed("highlight", false);
-                  // });
+  //draw usa states
+   svg.append("g")
+          // .attr("class","usa")
+    .selectAll(".state")
+              .data(states.features)
+              .enter()
+              .append("path")
+                  .attr("d", pathUsa)
+                  .attr("class", "state")
+                  .attr("id", d=>d.properties.name.replace(/ /g,""))
+                  .on("mouseover", function(d){
+                    d3.selectAll(".mapFlow").classed("dehighlight",true);
+                    //move state to top of drawing order
+                    d3.select(this).raise();
+                    //highlight state
+                    d3.select(this).style("stroke", "#000").style("stroke-width", "1px");
+                    //highlight flow arrows
+                    d3.selectAll(".flow"+d.properties["name"].replace(/ /g,"_")).classed("dehighlight",false).classed("highlight", true); 
+                  })
+                  .on("mouseout", function(d){
+                    d3.selectAll(".mapFlow").classed("dehighlight",false);
+                    //dehighlight state
+                    d3.select(this).style("stroke", "#fff").style("stroke-width", "0.25px");
+                    //dehighlight flow arrows
+                    d3.selectAll(".highlight").classed("highlight", false);
+                  });
 
-console.log(countries);
-  //draw united states
-  svg.append("g")
-        .selectAll(".usa")
-        .data(countries.filter(d=>d.properties["NAME"] == "United States of America"))
-        .enter()
-        .append("path")
-            .attr("class", "country")
-            .attr("d", pathUsa)
-            .attr("id", d=>d.properties["NAME"].replace(/ /g,""));
+// console.log(countries);
+//   //draw united states
+//   svg.append("g")
+//         .selectAll(".usa")
+//         .data(countries.filter(d=>d.properties["NAME"] == "United States of America"))
+//         .enter()
+//         .append("path")
+//             .attr("class", "country")
+//             .attr("d", pathUsa)
+//             .attr("id", d=>d.properties["NAME"].replace(/ /g,""));
 
   //scale for flows
   var wScale = d3.scaleLinear()
@@ -323,7 +299,7 @@ console.log(countries);
               .range([0,10]);
 
   //format map flows
-  var mapFlows = formatMapFlows(formatted,svg,pathUsa,pathGuate,wScale,albersUsa);
+  var mapFlows = formatMapFlows(formatted,svg,pathUsa,pathGuate,wScale);
 
 
   //create map flow generator
@@ -353,8 +329,7 @@ console.log(countries);
       .attr("id", d=> "flow"+ d.target["name"].replace(/ /g,"_"))
       .attr("d", mapLinkVertical)
       .attr("stroke-width", d => Math.max(0.5, d.width))
-      // .attr("stroke-opacity", 0.2)
-      .attr("stroke-opacity", 1)
+      .attr("stroke-opacity", 0.2)
       .attr("pointer-events", "none");
 
 }
@@ -384,8 +359,8 @@ function formatMapFlows(formatted,svg,pathUsa,pathGuate,wScale,albersUsa){
   for(var link of formatted.links){
        //get reference to source and calc centroid
       var source = svg.select(`#${link.source["name"].replace(/ /g,"")}`).datum();
-      // link.origin = pathUsa.centroid(source)
-      link.origin = albersUsa([-98.5795,39.8283])
+      link.origin = pathUsa.centroid(source)
+      // link.origin = albersUsa([-98.5795,39.8283])
        //same for target
       var target = svg.select(`#${link.target["name"].replace(/ /g,"")}`).datum();
       link.destination = pathGuate.centroid(target);
